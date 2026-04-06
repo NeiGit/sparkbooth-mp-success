@@ -10,12 +10,18 @@
       background: #000;
       color: #fff;
     }
-    #qrcode canvas {
+    #qrcode {
       margin-top: 20px;
     }
     .box {
       margin-top: 30px;
       font-size: 18px;
+    }
+    pre {
+      text-align: left;
+      display: inline-block;
+      background: #111;
+      padding: 10px;
     }
   </style>
 </head>
@@ -23,7 +29,8 @@
 
 <h1>Escaneá para pagar</h1>
 
-<div id="qrcode"></div>
+<!-- Canvas explícito -->
+<canvas id="qrcode"></canvas>
 
 <div class="box">
   <p>Polling count: <span id="count">0</span></p>
@@ -35,9 +42,14 @@
 <script>
   const paymentLink = "https://mpago.li/2sTSLcb";
 
-  // Generar QR
-  QRCode.toCanvas(document.getElementById('qrcode'), paymentLink, {
-    width: 300
+  // Generar QR correctamente en canvas
+  const canvas = document.getElementById("qrcode");
+
+  QRCode.toCanvas(canvas, paymentLink, {
+    width: 300,
+    margin: 2
+  }, function (error) {
+    if (error) console.error(error);
   });
 
   let count = 0;
@@ -62,10 +74,10 @@
       clearInterval(interval);
 
       document.getElementById("response").innerText +=
-        "\n\nRedirecting to Sparkbooth...";
+        "\n\nRedirecting...";
 
       setTimeout(() => {
-        window.location.href = "sparkbooth://success";
+        window.location.href = "https://www.google.com/";
       }, 1500);
     }
 
