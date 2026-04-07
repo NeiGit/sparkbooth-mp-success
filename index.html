@@ -2,49 +2,11 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>JS TEST</title>
+  <title>JS Test</title>
 </head>
-<body style="background:#000; color:#fff; text-align:center; font-family:sans-serif;">
+<body>
 
 <h1>TEST JS SPARKBOOTH</h1>
-
-<p>Polling count: <span id="count">0</span></p>
-
-<pre id="response"></pre>
-
-<script>
-  // Test inmediato (clave)
-  document.getElementById("response").innerHTML = "JS cargado";
-
-  var count = 0;
-  var maxAttempts = 3;
-
-  function makeRequest() {
-    count = count + 1;
-    document.getElementById("count").innerHTML = count;
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://jsonplaceholder.typicode.com/todos/1", true);
-
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        document.getElementById("response").innerHTML = xhr.responseText;
-
-        if (count >= maxAttempts) {
-          document.getElementById("response").innerHTML += "<br><br>REDIRECTING...";
-
-          setTimeout(function () {
-            window.location.href = "https://www.google.com/";
-          }, 1500);
-        }
-      }
-    };
-
-    xhr.send();
-  }
-
-  setInterval(makeRequest, 2000);
-</script>
-
+  
 </body>
 </html>
