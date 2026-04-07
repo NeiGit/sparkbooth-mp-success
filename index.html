@@ -2,86 +2,48 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Booth Test</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      background: #000;
-      color: #fff;
-    }
-    #qrcode {
-      margin-top: 20px;
-    }
-    .box {
-      margin-top: 30px;
-      font-size: 18px;
-    }
-    pre {
-      text-align: left;
-      display: inline-block;
-      background: #111;
-      padding: 10px;
-    }
-  </style>
+  <title>JS TEST</title>
 </head>
-<body>
+<body style="background:#000; color:#fff; text-align:center; font-family:sans-serif;">
 
-<h1>Escaneá para pagar</h1>
+<h1>TEST JS SPARKBOOTH</h1>
 
-<!-- Canvas explícito -->
-<canvas id="qrcode"></canvas>
+<p>Polling count: <span id="count">0</span></p>
 
-<div class="box">
-  <p>Polling count: <span id="count">0</span></p>
-  <pre id="response"></pre>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<pre id="response"></pre>
 
 <script>
-  const paymentLink = "https://mpago.li/2sTSLcb";
+  // Test inmediato (clave)
+  document.getElementById("response").innerHTML = "JS cargado";
 
-  // Generar QR correctamente en canvas
-  const canvas = document.getElementById("qrcode");
+  var count = 0;
+  var maxAttempts = 3;
 
-  QRCode.toCanvas(canvas, paymentLink, {
-    width: 300,
-    margin: 2
-  }, function (error) {
-    if (error) console.error(error);
-  });
+  function makeRequest() {
+    count = count + 1;
+    document.getElementById("count").innerHTML = count;
 
-  let count = 0;
-  const maxAttempts = 10;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://jsonplaceholder.typicode.com/todos/1", true);
 
-  const interval = setInterval(async () => {
-    count++;
-    document.getElementById("count").innerText = count;
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        document.getElementById("response").innerHTML = xhr.responseText;
 
-    try {
-      const res = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-      const data = await res.json();
+        if (count >= maxAttempts) {
+          document.getElementById("response").innerHTML += "<br><br>REDIRECTING...";
 
-      document.getElementById("response").innerText =
-        JSON.stringify(data, null, 2);
+          setTimeout(function () {
+            window.location.href = "https://www.google.com/";
+          }, 1500);
+        }
+      }
+    };
 
-    } catch (e) {
-      document.getElementById("response").innerText = "Error en fetch";
-    }
+    xhr.send();
+  }
 
-    if (count >= maxAttempts) {
-      clearInterval(interval);
-
-      document.getElementById("response").innerText +=
-        "\n\nRedirecting...";
-
-      setTimeout(() => {
-        window.location.href = "https://www.google.com/";
-      }, 1500);
-    }
-
-  }, 2000);
+  setInterval(makeRequest, 2000);
 </script>
 
 </body>
